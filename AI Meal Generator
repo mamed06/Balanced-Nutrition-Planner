@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balanced Nutrition Planner</title>
+    
+    <style>  /* styles, fonts, background */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5; /* Light gray background */
+            color: #333;
+        }
+        h1, p {
+            text-align: center;
+            color: #008080; /* Teal color */
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+        li {
+            margin: 10px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+            overflow: hidden; /* Ensure the corners are rounded */
+        }
+        li:hover {
+            transform: scale(1.05); /* Slightly larger on hover */
+        }
+        #generateButton, #generateResetButton {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease-in-out;
+        }
+        #generateButton {
+            background-color: #008080; /* Teal color */
+            color: #fff;
+        }
+        #generateResetButton {
+            background-color: #e74c3c; /* Red color */
+            color: #fff;
+        }
+        #generateButton:hover {
+            background-color: #005757; /* Darker teal color on hover */
+        }
+        #generateBreakfastButton, #generateLunchButton, #generateDinnerButton, #generateDayButton {
+            display: inline-block;
+            margin: 10px;
+            padding: 14px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #008080; /* Teal color */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease-in-out;
+        }
+        #generateBreakfastButton:hover, #generateLunchButton:hover, #generateDinnerButton:hover, #generateDayButton:hover {
+            background-color: #005757; /* Darker teal color on hover */
+        }
+        #optionsForm {
+            text-align: center;
+            margin-top: 20px;
+            background-color: #f0f0f0; /* Light gray background for the form */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        label, select, input {
+            margin: 10px;
+            font-size: 16px;
+            background-color: #f8f8f8; /* Off-white background for form elements */
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        #mealList {
+            margin-top: 20px;
+        }
+
+        body {
+            background-image: linear-gradient(to right top, #93d9c4, #91d1c9, #8dc9cd, #87c0d0, #7fb7d1);
+            color: #333;
+        }
+
+        h1 {
+            color: #004d4d; /* Dark teal color for heading */
+        }
+
+        #optionsForm {
+            background-color: #bda87a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        label, select, input {
+            background-color: #babdb9;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            color: #333; 
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        button:hover {
+            filter: brightness(90%); 
+        }
+        .rating {
+            color: #f39c12; 
+            font-size: 20px;
+            margin-top: 10px;
+        }
+
+        .dietary-icons {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        .timestamp {
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Balanced Nutrition Planner</h1>
+    <p>Customized for Your Needs</p>
+    
+    <form id="optionsForm">  
+        <div id="calorieTargetWrapper">
+            <label id="calorieTargetLabel" for="calorieTarget">Calorie Target:</label>
+            <input type="number" id="calorieTarget" min="100" max="1000" step="50" value="450">
+        </div>
+
+        <div id="dietaryRestrictionsWrapper">
+            <label id="dietaryRestrictionsLabel" for="dietaryRestrictions">Dietary Restrictions:</label>
+            <select id="dietaryRestrictions" multiple>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="vegan">Vegan</option>
+                <option value="glutenFree">Gluten-Free</option>
+            </select>
+
+            <label for="mealsPerDay">Meals Per Day:</label>
+            <input type="number" id="mealsPerDay" min="1" max="5" step="1" value="3">
+
+            <button type="button" id="generateBreakfastButton" onclick="generateMeal('Breakfast')">Generate Breakfast</button>
+            <button type="button" id="generateLunchButton" onclick="generateMeal('Lunch')">Generate Lunch</button>
+            <button type="button" id="generateDinnerButton" onclick="generateMeal('Dinner')">Generate Dinner</button>
+            <button type="button" id="generateDayButton" onclick="generateDay()">Generate Full Day</button>
+
+            <button type="button" id="generateButton" onclick="generateMeals()">Generate Meals</button>
+            <button type="button" id="generateResetButton" onclick="resetMeals()">Reset Meals</button>
+        </div>
+    </form>
+
+
+    <h2>AI Generated Meals</h2>
+
+    <ul id="mealList">
+        <!-- Meal options will be dynamically added here -->
+    </ul>
+    <!-- AI Algorithm -->
+    <script>
+        function generateMeal(mealType) {
+            const calorieTarget = parseInt(document.getElementById("calorieTarget").value);
+            const dietaryRestrictions = Array.from(document.getElementById("dietaryRestrictions").selectedOptions, option => option.value);
+
+            // advanced algorithm logic here
+            const generatedMeal = generateMealOptions(mealType, calorieTarget, dietaryRestrictions);
+
+            // Update the HTML with the generated meal
+            const mealList = document.getElementById("mealList");
+            const newMealItem = document.createElement("li");
+            newMealItem.innerHTML = `<strong>${mealType}:</strong><br>${generatedMeal}`;
+            
+            // Clear previous meal and add the new one
+            mealList.innerHTML = '';
+            mealList.appendChild(newMealItem);
+        }
+
+        function generateDay() {
+            const calorieTarget = parseInt(document.getElementById("calorieTarget").value);
+            const dietaryRestrictions = Array.from(document.getElementById("dietaryRestrictions").selectedOptions, option => option.value);
+
+            // Generate meals for the entire day
+            const breakfast = generateMealOptions('Breakfast', calorieTarget, dietaryRestrictions);
+            const lunch = generateMealOptions('Lunch', calorieTarget, dietaryRestrictions);
+            const dinner = generateMealOptions('Dinner', calorieTarget, dietaryRestrictions);
+
+            // Display the generated meals
+            const mealList = document.getElementById("mealList");
+            const breakfastItem = document.createElement("li");
+            breakfastItem.innerHTML = `<strong>Breakfast:</strong><br>${breakfast}`;
+
+            const lunchItem = document.createElement("li");
+            lunchItem.innerHTML = `<strong>Lunch:</strong><br>${lunch}`;
+
+            const dinnerItem = document.createElement("li");
+            dinnerItem.innerHTML = `<strong>Dinner:</strong><br>${dinner}`;
+
+            // Clear previous meals and add the new ones
+            mealList.innerHTML = '';
+            mealList.appendChild(breakfastItem);
+            mealList.appendChild(lunchItem);
+            mealList.appendChild(dinnerItem);
+        }
+
+        function generateMealOptions(mealType, calorieTarget, dietaryRestrictions) {
+            // Advanced meal generation logic 
+            // Example: Decision tree-based approach for simplicity
+
+            let mainDishOptions, sideOptions, proteinOptions, beverageOptions, extraOptions;
+
+            // Determine meal options based on dietary restrictions
+            if (dietaryRestrictions.includes("vegetarian")) {
+                mainDishOptions = ["Oatmeal", "Smoothie", "Quinoa Salad", "Vegetarian Stir-Fry", "Eggplant Parmesan"];
+                proteinOptions = ["Greek Yogurt with Berries", "Cottage Cheese", "Chickpea Salad"];
+                extraOptions = ["Sliced Avocado", "Chia Seeds", "Roasted Nuts"];
+            } else if (dietaryRestrictions.includes("vegan")) {
+                mainDishOptions = ["Oatmeal", "Smoothie", "Quinoa Salad", "Vegan Stir-Fry", "Vegan Burrito Bowl"];
+                proteinOptions = ["Vegan Protein Shake", "Chia Pudding", "Lentil Soup"];
+                extraOptions = ["Sliced Avocado", "Chia Seeds", "Nutritional Yeast"];
+            } else {
+                mainDishOptions = ["Scrambled Eggs", "Oatmeal", "Smoothie", "Chicken Salad", "Grilled Salmon", "Beef Stir-Fry"];
+                proteinOptions = ["Greek Yogurt with Berries", "Protein Pancakes", "Cottage Cheese", "Grilled Chicken Breast", "Salmon Fillet"];
+                extraOptions = ["Sliced Avocado", "Almond Butter", "Chia Seeds", "Cheese"];
+            }
+
+            // Function to get a random element from an array
+            function getRandomElement(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            // Select meal options based on calorie target
+            let mainDish = getRandomElement(mainDishOptions);
+            let side = getRandomElement(["Whole Grain Toast", "Fruit Salad", "Steamed Vegetables", "Quinoa"]);
+            let protein = getRandomElement(proteinOptions);
+            let beverage = getRandomElement(["Black Coffee", "Green Tea", "Orange Juice", "Water"]);
+            let extra = getRandomElement(extraOptions);
+
+            // Adjust calories based on the complexity of the meal
+            let mainDishCalories = Math.floor(Math.random() * 150) + 150;
+            let sideCalories = Math.floor(Math.random() * 50) + 50;
+            let proteinCalories = Math.floor(Math.random() * 150) + 50;
+            let beverageCalories = Math.floor(Math.random() * 20) + 1;
+            let extraCalories = Math.floor(Math.random() * 100) + 50;
+
+            // Adjust calories to meet the calorie target
+            const totalCalories = mainDishCalories + sideCalories + proteinCalories + beverageCalories + extraCalories;
+            const calorieAdjustment = calorieTarget / totalCalories;
+
+            mainDishCalories = Math.round(mainDishCalories * calorieAdjustment);
+            sideCalories = Math.round(sideCalories * calorieAdjustment);
+            proteinCalories = Math.round(proteinCalories * calorieAdjustment);
+            beverageCalories = Math.round(beverageCalories * calorieAdjustment);
+            extraCalories = Math.round(extraCalories * calorieAdjustment);
+
+            // Additional features
+            const rating = generateMealRating();
+            const icons = getDietaryIcons(dietaryRestrictions);
+            const timestamp = generateMealTimestamp();
+
+            return `
+                ${icons}<br>
+                <span class="rating">${rating}</span><br>
+                <span class="timestamp">Recommended time: ${timestamp}</span><br>
+                <span style="color: #008080;">${mainDish}</span> (${mainDishCalories} calories)<br>
+                <span style="color: #008080;">Side:</span> ${side} (${sideCalories} calories)<br>
+                <span style="color: #008080;">Protein:</span> ${protein} (${proteinCalories} calories)<br>
+                <span style="color: #008080;">Beverage:</span> ${beverage} (${beverageCalories} calories)<br>
+                <span style="color: #008080;">Extras:</span> ${extra} (${extraCalories} calories)<br>
+                <span style="color: #008080;">Total Calories:</span> ${calorieTarget} calories
+            `;
+        }
+
+        // Additional Function for Meal Ratings
+        function generateMealRating() {
+            const ratings = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"];
+            const randomIndex = Math.floor(Math.random() * ratings.length);
+            return ratings[randomIndex];
+        }
+
+        // Additional Function for Dietary Icons
+        function getDietaryIcons(dietaryRestrictions) {
+            let icons = "";
+            if (dietaryRestrictions.includes("vegetarian")) {
+                icons += "🌱 ";
+            }
+            if (dietaryRestrictions.includes("vegan")) {
+                icons += "🌱🥑 ";
+            }
+            if (dietaryRestrictions.includes("glutenFree")) {
+                icons += "🚫🌾 ";
+            }
+            return icons;
+        }
+
+        // Additional Function for Meal Timestamp
+        function generateMealTimestamp() {
+            const timestamps = ["8:00 AM", "12:30 PM", "6:00 PM", "9:00 PM"];
+            const randomIndex = Math.floor(Math.random() * timestamps.length);
+            return timestamps[randomIndex];
+        }
+
+        function generateMeals() {
+            const mealsPerDay = parseInt(document.getElementById("mealsPerDay").value);
+
+            // Validate mealsPerDay input
+            if (mealsPerDay < 1 || mealsPerDay > 5) {
+                alert("Please enter a valid number of meals per day (1-5).");
+                return;
+            }
+
+            const calorieTarget = parseInt(document.getElementById("calorieTarget").value);
+            const dietaryRestrictions = Array.from(document.getElementById("dietaryRestrictions").selectedOptions, option => option.value);
+
+            // Generate meals for the entire day
+            const mealList = document.getElementById("mealList");
+            mealList.innerHTML = '';
+
+            for (let i = 1; i <= mealsPerDay; i++) {
+                const mealType = `Meal ${i}`;
+                const generatedMeal = generateMealOptions(mealType, calorieTarget, dietaryRestrictions);
+
+                const mealItem = document.createElement("li");
+                mealItem.innerHTML = `<strong>${mealType}:</strong><br>${generatedMeal}`;
+                mealList.appendChild(mealItem);
+            }
+        }
+
+        function resetMeals() {
+            const mealList = document.getElementById("mealList");
+            mealList.innerHTML = '';
+        
+        }
+    </script>
+</body>
+</html>
